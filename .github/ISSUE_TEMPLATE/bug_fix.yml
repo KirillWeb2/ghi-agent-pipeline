@@ -1,0 +1,62 @@
+name: Bug fix (agent)
+description: Исправление бага для пайплайна агента
+title: "[agent][bug] "
+labels: ["agent:new"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Опиши проблему максимально конкретно. Чем лучше воспроизведение и критерии приёмки, тем выше шанс корректного авто-фикса.
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст / проблема
+      description: Где обнаружена проблема и почему это важно
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Шаги воспроизведения
+      description: Нумерованный список шагов, как воспроизвести баг
+      placeholder: |
+        1. Открыть ...
+        2. Нажать ...
+        3. Получить ошибку ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected_actual
+    attributes:
+      label: Ожидаемое и фактическое поведение
+      placeholder: |
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Критерии приёмки (чеклист)
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Что НЕ трогать (ограничения)
+    validations:
+      required: true
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Как проверить вручную / автотесты
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Окружение
+      description: Браузер/ОС/версия (если релевантно)
+      placeholder: "Chrome 135, Windows 11"
+    validations:
+      required: false
