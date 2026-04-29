@@ -1,0 +1,33 @@
+name: Feature (agent)
+description: Новая фича для пайплайна агента
+title: "[agent] "
+labels: ["agent:new"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Заполни все секции. Без чётких критериев приёмки агенты дают худший результат.
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст / проблема
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Критерии приёмки (чеклист)
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Что НЕ трогать (ограничения)
+    validations:
+      required: true
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Как проверить вручную / автотесты
+    validations:
+      required: true
