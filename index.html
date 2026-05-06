@@ -10,8 +10,9 @@
   <header class="topbar">
     <h1>Agent Task Playground</h1>
     <div class="topbar-actions">
-      <button id="themeToggle" class="btn btn-secondary">Toggle Theme</button>
-      <button id="seedBtn" class="btn btn-secondary">Seed Demo Tasks</button>
+      <button id="themeToggle" class="btn btn-secondary" type="button">Toggle Theme</button>
+      <button id="seedBtn" class="btn btn-secondary" type="button">Seed Demo Tasks</button>
+      <button id="helpBtn" class="btn btn-secondary" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="helpDialog">Help</button>
     </div>
   </header>
 
@@ -63,6 +64,18 @@
   <footer class="footer">
     <p>Built as a tiny playground for coding-agent tasks.</p>
   </footer>
+
+  <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle">
+    <div class="help-dialog-panel">
+      <button type="button" class="help-dialog-close" id="helpCloseBtn" aria-label="Close help">&times;</button>
+      <h2 id="helpTitle" class="help-dialog-title">Quick tips</h2>
+      <ul class="help-dialog-list">
+        <li>Use filters and search to narrow the backlog before changing task status.</li>
+        <li>Toggle theme anytime; your choice is saved in this browser.</li>
+        <li>Seed demo tasks only runs when the list is empty—clear tasks first if you need samples.</li>
+      </ul>
+    </div>
+  </dialog>
 
   <script src="app.js"></script>
 </body>

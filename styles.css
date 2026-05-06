@@ -39,6 +39,14 @@ body {
   background: var(--surface);
 }
 
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .footer {
   border-top: 1px solid var(--border);
   border-bottom: none;
@@ -163,7 +171,76 @@ input, select, textarea {
 .small-btn.danger { border-color: var(--danger); color: var(--danger); }
 .empty { color: var(--muted); }
 
+.help-dialog {
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: calc(100vw - 2rem);
+  width: min(420px, 100%);
+  margin: auto;
+}
+
+.help-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+body.dark .help-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.help-dialog-panel {
+  position: relative;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 1rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  max-height: min(70vh, 100%);
+  overflow: auto;
+}
+
+.help-dialog-title {
+  margin: 0 2rem 0.75rem 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.help-dialog-list {
+  margin: 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.help-dialog-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-dialog-close:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+
 @media (max-width: 760px) {
   .form-grid { grid-template-columns: 1fr; }
   .topbar { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .topbar-actions { width: 100%; justify-content: flex-start; }
 }

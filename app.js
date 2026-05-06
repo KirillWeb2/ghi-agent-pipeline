@@ -8,6 +8,9 @@ const statusFilters = document.getElementById("statusFilters");
 const searchInput = document.getElementById("search");
 const themeToggle = document.getElementById("themeToggle");
 const seedBtn = document.getElementById("seedBtn");
+const helpBtn = document.getElementById("helpBtn");
+const helpDialog = document.getElementById("helpDialog");
+const helpCloseBtn = document.getElementById("helpCloseBtn");
 
 let tasks = loadTasks();
 let activeStatus = "all";
@@ -83,6 +86,37 @@ statusFilters.addEventListener("click", (event) => {
 searchInput.addEventListener("input", () => {
   searchQuery = searchInput.value.trim().toLowerCase();
   render();
+});
+
+function setHelpExpanded(isOpen) {
+  helpBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function openHelp() {
+  helpDialog.showModal();
+  setHelpExpanded(true);
+}
+
+function closeHelp() {
+  helpDialog.close();
+}
+
+helpBtn.addEventListener("click", () => {
+  openHelp();
+});
+
+helpCloseBtn.addEventListener("click", () => {
+  closeHelp();
+});
+
+helpDialog.addEventListener("close", () => {
+  setHelpExpanded(false);
+});
+
+helpDialog.addEventListener("click", (event) => {
+  if (event.target === helpDialog) {
+    closeHelp();
+  }
 });
 
 seedBtn.addEventListener("click", () => {
