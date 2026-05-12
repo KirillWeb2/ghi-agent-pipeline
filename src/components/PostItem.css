@@ -1,105 +1,155 @@
 .post-item {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-  border-left: 4px solid #3498db;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.08) 0%, rgba(255, 0, 255, 0.08) 100%);
+  border: 2px solid rgba(0, 240, 255, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: slideInUp 0.6s ease-out;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.post-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.post-item-deleting {
-  opacity: 0.6;
-  pointer-events: none;
+.post-item:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 32px rgba(0, 240, 255, 0.3);
+  transform: translateY(-4px);
+}
+
+.post-image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.post-item:hover .post-image {
+  transform: scale(1.05);
+}
+
+.post-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 .post-title {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1.25rem;
-  line-height: 1.4;
-  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
   word-break: break-word;
-}
-
-.btn-delete {
-  background: none;
-  border: none;
-  color: #7f8c8d;
-  font-size: 1.75rem;
-  cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.btn-delete:hover {
-  color: #e74c3c;
-  background-color: #ffe6e6;
-}
-
-.post-body {
-  color: #555;
-  line-height: 1.6;
-  margin: 0 0 1rem 0;
-  flex: 1;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: break-word;
-  overflow-y: auto;
-  max-height: 200px;
-}
-
-.post-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  border-top: 1px solid #ecf0f1;
-  padding-top: 1rem;
-  margin-top: auto;
 }
 
 .post-date {
-  color: #95a5a6;
   font-size: 0.85rem;
-  font-style: italic;
+  color: var(--text-secondary);
+  display: block;
 }
 
-@media (max-width: 600px) {
-  .post-item {
+.post-body {
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  flex: 1;
+  word-break: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.post-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.btn-edit,
+.btn-delete {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 6px;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-delete {
+  border-color: rgba(255, 0, 255, 0.3);
+  background: rgba(255, 0, 255, 0.1);
+  color: var(--secondary);
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: rgba(255, 0, 255, 0.2);
+  border-color: var(--secondary);
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.3);
+}
+
+.btn-edit:active:not(:disabled),
+.btn-delete:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-edit:disabled,
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .post-image-container {
+    height: 150px;
+  }
+
+  .post-content {
     padding: 1rem;
   }
 
-  .post-header {
-    flex-direction: column;
-  }
-
   .post-title {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
-  .btn-delete {
-    align-self: flex-end;
+  .post-actions {
+    flex-direction: column;
   }
 }

@@ -1,76 +1,73 @@
 import { useState } from 'react'
 import './PostForm.css'
 
-const TITLE_MAX_LENGTH = 100
-const BODY_MAX_LENGTH = 5000
-const TITLE_MIN_LENGTH = 1
-const BODY_MIN_LENGTH = 1
-
-function PostForm({ onSubmit, onCancel, initialData = null }) {
-  const [title, setTitle] = useState(initialData?.title || '')
-  const [body, setBody] = useState(initialData?.body || '')
+function PostForm({ onSubmit, initialValues = { title: '', body: '' }, submitText = 'Создать пост' }) {
+  const [formData, setFormData] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const sanitizeText = (text) => {
-    return text
-      .trim()
-      .replace(/[<>]/g, '') // Remove angle brackets
-      .slice(0, initialData ? BODY_MAX_LENGTH : BODY_MAX_LENGTH)
-  }
 
   const validateForm = () => {
     const newErrors = {}
 
-    if (!title.trim() || title.trim().length < TITLE_MIN_LENGTH) {
-      newErrors.title = 'Title is required'
-    } else if (title.length > TITLE_MAX_LENGTH) {
-      newErrors.title = `Title must be ${TITLE_MAX_LENGTH} characters or less`
+    // Title validation
+    if (!formData.title.trim()) {
+      newErrors.title = 'Заголовок обязателен'
+    } else if (formData.title.length < 3) {
+      newErrors.title = 'Заголовок должен быть минимум 3 символа'
+    } else if (formData.title.length > 100) {
+      newErrors.title = 'Заголовок не должен превышать 100 символов'
     }
 
-    if (!body.trim() || body.trim().length < BODY_MIN_LENGTH) {
-      newErrors.body = 'Body is required'
-    } else if (body.length > BODY_MAX_LENGTH) {
-      newErrors.body = `Body must be ${BODY_MAX_LENGTH} characters or less`
+    // Body validation
+    if (!formData.body.trim()) {
+      newErrors.body = 'Текст поста обязателен'
+    } else if (formData.body.length < 10) {
+      newErrors.body = 'Текст должен быть минимум 10 символов'
+    } else if (formData.body.length > 5000) {
+      newErrors.body = 'Текст не должен превышать 5000 символов'
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return newErrors
   }
 
-  const handleTitleChange = (e) => {
-    const value = e.target.value
-    if (value.length <= TITLE_MAX_LENGTH) {
-      setTitle(value)
-      if (errors.title) {
-        setErrors((prev) => ({ ...prev, title: '' }))
-      }
-    }
+  const sanitizeInput = (text) => {
+    return text
+      .replace(/[<>]/g, '')
+      .trim()
   }
 
-  const handleBodyChange = (e) => {
-    const value = sanitizeText(e.target.value)
-    setBody(value)
-    if (errors.body) {
-      setErrors((prev) => ({ ...prev, body: '' }))
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: sanitizeInput(value)
+    }))
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!validateForm()) {
+    
+    const newErrors = validateForm()
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
       return
     }
 
     setIsSubmitting(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 100)) // Simulate async operation
-      onSubmit({
-        title: title.trim(),
-        body: body.trim(),
-      })
+      // Simulate async operation
+      await new Promise(resolve => setTimeout(resolve, 300))
+      await onSubmit(formData)
     } catch (error) {
-      setErrors({ form: 'Failed to submit form. Please try again.' })
+      console.error('Form submission error:', error)
+      setErrors({ submit: 'Ошибка при отправке формы' })
     } finally {
       setIsSubmitting(false)
     }
@@ -78,69 +75,53 @@ function PostForm({ onSubmit, onCancel, initialData = null }) {
 
   return (
     <form className="post-form" onSubmit={handleSubmit}>
-      {errors.form && <div className="form-error">{errors.form}</div>}
-
       <div className="form-group">
-        <label htmlFor="title" className="label">
-          Title *
+        <label htmlFor="title" className="form-label">
+          Заголовок
+          <span className="required">*</span>
         </label>
         <input
-          id="title"
           type="text"
-          value={title}
-          onChange={handleTitleChange}
-          placeholder="Enter post title"
-          className={`input ${errors.title ? 'input-error' : ''}`}
+          id="title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="Введите заголовок поста..."
+          className={`form-input ${errors.title ? 'error' : ''}`}
           disabled={isSubmitting}
-          maxLength={TITLE_MAX_LENGTH}
-          required
         />
-        <div className="field-info">
-          <span className={errors.title ? 'error-text' : 'help-text'}>
-            {errors.title || `${title.length}/${TITLE_MAX_LENGTH}`}
-          </span>
-        </div>
+        {errors.title && <span className="error-message">{errors.title}</span>}
+        <span className="char-count">{formData.title.length}/100</span>
       </div>
 
       <div className="form-group">
-        <label htmlFor="body" className="label">
-          Body *
+        <label htmlFor="body" className="form-label">
+          Текст поста
+          <span className="required">*</span>
         </label>
         <textarea
           id="body"
-          value={body}
-          onChange={handleBodyChange}
-          placeholder="Enter post body"
-          className={`textarea ${errors.body ? 'input-error' : ''}`}
+          name="body"
+          value={formData.body}
+          onChange={handleChange}
+          placeholder="Введите текст поста..."
+          rows="8"
+          className={`form-textarea ${errors.body ? 'error' : ''}`}
           disabled={isSubmitting}
-          maxLength={BODY_MAX_LENGTH}
-          rows="10"
-          required
         />
-        <div className="field-info">
-          <span className={errors.body ? 'error-text' : 'help-text'}>
-            {errors.body || `${body.length}/${BODY_MAX_LENGTH}`}
-          </span>
-        </div>
+        {errors.body && <span className="error-message">{errors.body}</span>}
+        <span className="char-count">{formData.body.length}/5000</span>
       </div>
 
-      <div className="form-actions">
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Creating...' : 'Create Post'}
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline"
-          onClick={onCancel}
-          disabled={isSubmitting}
-        >
-          Cancel
-        </button>
-      </div>
+      {errors.submit && <span className="error-message">{errors.submit}</span>}
+
+      <button 
+        type="submit" 
+        className="submit-btn"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? '⏳ Создание...' : submitText}
+      </button>
     </form>
   )
 }
