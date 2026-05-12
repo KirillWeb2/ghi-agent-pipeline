@@ -1,49 +1,97 @@
-import { useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import Layout from './components/Layout'
+import PostsList from './pages/PostsList'
+import CreatePost from './pages/CreatePost'
+import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const statusCycle = ['idle', 'running', 'done', 'failed']
-  const [agentStatusIndex, setAgentStatusIndex] = useState(0)
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const currentStatus = statusCycle[agentStatusIndex]
+  // Load posts from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedPosts = localStorage.getItem('posts')
+      if (savedPosts) {
+        setPosts(JSON.parse(savedPosts))
+      }
+    } catch (error) {
+      console.error('Failed to load posts from localStorage:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
-  const handleSimulateNext = () => {
-    setAgentStatusIndex((prevIndex) => (prevIndex + 1) % statusCycle.length)
+  // Save posts to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('posts', JSON.stringify(posts))
+    } catch (error) {
+      console.error('Failed to save posts to localStorage:', error)
+    }
+  }, [posts])
+
+  const addPost = (newPost) => {
+    const post = {
+      id: Date.now(),
+      ...newPost,
+      createdAt: new Date().toISOString(),
+    }
+    setPosts((prevPosts) => [post, ...prevPosts])
+    return post
+  }
+
+  const updatePost = (id, updatedPost) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === id ? { ...post, ...updatedPost, updatedAt: new Date().toISOString() } : post
+      )
+    )
+  }
+
+  const deletePost = (id) => {
+    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id))
+  }
+
+  const searchPosts = (query) => {
+    if (!query.trim()) return posts
+    const lowerQuery = query.toLowerCase()
+    return posts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(lowerQuery) ||
+        post.body.toLowerCase().includes(lowerQuery)
+    )
+  }
+
+  if (loading) {
+    return <div className="loading">Loading posts...</div>
   }
 
   return (
-    <div className="app-container">
-      <section className="counter-section">
-        <h1>Vite + React</h1>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </section>
-
-      <section className={`agent-status agent-status--${currentStatus}`}>
-        <h2>Agent run</h2>
-        <div className="agent-status-info">
-          <div className="agent-status-row">
-            <span className="agent-status-label">Step:</span>
-            <span className="agent-status-value">ingest</span>
-          </div>
-          <div className="agent-status-row">
-            <span className="agent-status-label">Status:</span>
-            <span className="agent-status-value">{currentStatus}</span>
-          </div>
-        </div>
-        <button
-          className="agent-status-button"
-          onClick={handleSimulateNext}
-        >
-          Simulate next
-        </button>
-      </section>
-    </div>
+    <ErrorBoundary>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Navigate to="/posts" replace />} />
+          <Route
+            path="/posts"
+            element={
+              <PostsList
+                posts={posts}
+                onDelete={deletePost}
+                onSearch={searchPosts}
+              />
+            }
+          />
+          <Route
+            path="/posts/new"
+            element={<CreatePost onAddPost={addPost} />}
+          />
+          <Route path="*" element={<Navigate to="/posts" replace />} />
+        </Routes>
+      </Layout>
+    </ErrorBoundary>
   )
 }
 
