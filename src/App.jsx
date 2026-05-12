@@ -1,101 +1,78 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import Layout from './components/Layout'
 import PostsList from './pages/PostsList'
 import CreatePost from './pages/CreatePost'
+import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
 
-// Posts context for global state management
-const PostsContext = createContext()
-
-export const usePostsContext = () => {
-  const context = useContext(PostsContext)
-  if (!context) {
-    throw new Error('usePostsContext must be used within PostsProvider')
-  }
-  return context
-}
+const STORAGE_KEY = 'posts_data'
 
 function App() {
   const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   // Load posts from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('posts')
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed)) {
-          setPosts(parsed)
+      const savedPosts = localStorage.getItem(STORAGE_KEY)
+      if (savedPosts) {
+        const parsedPosts = JSON.parse(savedPosts)
+        if (Array.isArray(parsedPosts)) {
+          setPosts(parsedPosts)
         }
       }
     } catch (error) {
-      console.error('Failed to load posts from localStorage:', error)
+      console.error('Error loading posts from localStorage:', error)
+    } finally {
+      setLoading(false)
     }
   }, [])
 
   // Save posts to localStorage whenever they change
   useEffect(() => {
-    try {
-      localStorage.setItem('posts', JSON.stringify(posts))
-    } catch (error) {
-      console.error('Failed to save posts to localStorage:', error)
+    if (!loading) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts))
+      } catch (error) {
+        console.error('Error saving posts to localStorage:', error)
+      }
     }
-  }, [posts])
+  }, [posts, loading])
 
-  const addPost = (post) => {
-    const newPost = {
+  const addPost = (newPost) => {
+    const post = {
       id: Date.now(),
-      ...post,
+      ...newPost,
       createdAt: new Date().toISOString(),
-      imageUrl: getRandomCatImage(),
     }
-    setPosts([newPost, ...posts])
-    return newPost
-  }
-
-  const updatePost = (id, updates) => {
-    setPosts(posts.map(p => p.id === id ? { ...p, ...updates } : p))
+    setPosts([post, ...posts])
+    return post
   }
 
   const deletePost = (id) => {
-    setPosts(posts.filter(p => p.id !== id))
+    setPosts(posts.filter(post => post.id !== id))
   }
 
-  const searchPosts = (query) => {
-    if (!query.trim()) return posts
-    const q = query.toLowerCase()
-    return posts.filter(p => 
-      p.title.toLowerCase().includes(q) || 
-      p.body.toLowerCase().includes(q)
-    )
-  }
-
-  const getRandomCatImage = () => {
-    // Using a placeholder cat API
-    const randomId = Math.floor(Math.random() * 1000)
-    return `https://api.thecatapi.com/v1/images/search?mime_types=jpg&limit=1&random=${randomId}?id=${randomId}`
-  }
-
-  const value = {
-    posts,
-    addPost,
-    updatePost,
-    deletePost,
-    searchPosts,
+  const updatePost = (id, updatedData) => {
+    setPosts(posts.map(post =>
+      post.id === id
+        ? { ...post, ...updatedData, updatedAt: new Date().toISOString() }
+        : post
+    ))
   }
 
   return (
-    <PostsContext.Provider value={value}>
+    <ErrorBoundary>
       <Layout>
         <Routes>
+          <Route path="/posts" element={<PostsList posts={posts} onDeletePost={deletePost} onUpdatePost={updatePost} />} />
+          <Route path="/posts/new" element={<CreatePost onAddPost={addPost} />} />
           <Route path="/" element={<Navigate to="/posts" replace />} />
-          <Route path="/posts" element={<PostsList />} />
-          <Route path="/posts/new" element={<CreatePost />} />
           <Route path="*" element={<Navigate to="/posts" replace />} />
         </Routes>
       </Layout>
-    </PostsContext.Provider>
+    </ErrorBoundary>
   )
 }
 

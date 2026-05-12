@@ -4,27 +4,25 @@ import './Layout.css'
 function Layout({ children }) {
   return (
     <div className="layout">
-      <header className="header">
-        <div className="header-content">
-          <h1 className="logo">✨ PostHub</h1>
-          <nav className="nav">
-            <NavLink 
-              to="/posts" 
+      <nav className="navbar">
+        <div className="navbar-container">
+          <h1 className="navbar-title">PostApp</h1>
+          <div className="nav-links">
+            <NavLink
+              to="/posts"
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">📝</span>
               Посты
             </NavLink>
-            <NavLink 
-              to="/posts/new" 
+            <NavLink
+              to="/posts/new"
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             >
-              <span className="nav-icon">➕</span>
               Новый пост
             </NavLink>
-          </nav>
+          </div>
         </div>
-      </header>
+      </nav>
       <main className="main-content">
         {children}
       </main>
