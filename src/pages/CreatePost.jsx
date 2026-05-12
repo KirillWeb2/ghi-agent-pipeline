@@ -1,16 +1,14 @@
 import { useNavigate } from 'react-router-dom'
-import { usePostsContext } from '../App'
 import PostForm from '../components/PostForm'
 import './CreatePost.css'
 
-function CreatePost() {
+function CreatePost({ onAddPost }) {
   const navigate = useNavigate()
-  const { addPost } = usePostsContext()
 
-  const handleSubmit = async (formData) => {
+  const handleFormSubmit = async (formData) => {
     try {
-      await addPost(formData)
-      navigate('/posts', { replace: true })
+      onAddPost(formData)
+      navigate('/posts')
     } catch (error) {
       console.error('Error creating post:', error)
       throw error
@@ -19,11 +17,11 @@ function CreatePost() {
 
   return (
     <div className="create-post-container">
-      <div className="create-post-header">
-        <h1>✍️ Создать новый пост</h1>
-        <p>Поделитесь своей историей с сообществом</p>
-      </div>
-      <PostForm onSubmit={handleSubmit} submitText="✨ Создать пост" />
+      <h1 className="create-post-title">Создать новый пост</h1>
+      <PostForm
+        onSubmit={handleFormSubmit}
+        submitButtonText="Создать пост"
+      />
     </div>
   )
 }

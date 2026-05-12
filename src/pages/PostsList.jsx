@@ -1,121 +1,116 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { usePostsContext } from '../App'
 import PostItem from '../components/PostItem'
 import './PostsList.css'
 
-function PostsList() {
-  const { posts, deletePost, searchPosts } = usePostsContext()
+function PostsList({ posts, onDeletePost, onUpdatePost }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('newest')
 
-  const filteredPosts = useMemo(() => {
-    let result = searchQuery ? searchPosts(searchQuery) : posts
+  const filteredAndSortedPosts = useMemo(() => {
+    let result = posts.filter(post => {
+      const query = searchQuery.toLowerCase()
+      return (
+        post.title.toLowerCase().includes(query) ||
+        post.body.toLowerCase().includes(query)
+      )
+    })
 
     if (sortBy === 'newest') {
-      result = [...result].sort((a, b) => 
-        new Date(b.createdAt) - new Date(a.createdAt)
-      )
+      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     } else if (sortBy === 'oldest') {
-      result = [...result].sort((a, b) => 
-        new Date(a.createdAt) - new Date(b.createdAt)
-      )
-    } else if (sortBy === 'title') {
-      result = [...result].sort((a, b) => 
-        a.title.localeCompare(b.title)
-      )
+      result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    } else if (sortBy === 'title-asc') {
+      result.sort((a, b) => a.title.localeCompare(b.title))
+    } else if (sortBy === 'title-desc') {
+      result.sort((a, b) => b.title.localeCompare(a.title))
     }
 
     return result
-  }, [posts, searchQuery, sortBy, searchPosts])
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value)
-  }
-
-  const handleEditPost = (post) => {
-    console.log('Edit post:', post)
-    // TODO: Implement edit functionality
-  }
-
-  const isEmpty = posts.length === 0
-  const isSearchEmpty = searchQuery && filteredPosts.length === 0
+  }, [posts, searchQuery, sortBy])
 
   return (
     <div className="posts-list-container">
       <div className="posts-header">
-        <h1 className="posts-title">📝 Все посты</h1>
-        <p className="posts-subtitle">Всего постов: {posts.length}</p>
+        <h1 className="posts-title">Все посты</h1>
+        <Link to="/posts/new" className="create-post-link">
+          + Новый пост
+        </Link>
       </div>
 
-      {!isEmpty && (
-        <div className="search-section">
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="🔍 Поиск по заголовку или тексту..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="search-input"
-            />
-            {searchQuery && (
-              <button
-                className="clear-search"
-                onClick={() => setSearchQuery('')}
-                title="Очистить поиск"
+      {posts.length > 0 ? (
+        <>
+          <div className="posts-controls">
+            <div className="search-box">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Поиск по заголовку или тексту..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  className="search-clear"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Очистить поиск"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="sort-box">
+              <label htmlFor="sort-select" className="sort-label">Сортировка:</label>
+              <select
+                id="sort-select"
+                className="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
               >
-                ✕
+                <option value="newest">Новые первыми</option>
+                <option value="oldest">Старые первыми</option>
+                <option value="title-asc">По названию (А-Я)</option>
+                <option value="title-desc">По названию (Я-А)</option>
+              </select>
+            </div>
+          </div>
+
+          {filteredAndSortedPosts.length > 0 ? (
+            <>
+              <div className="posts-count">
+                Показано {filteredAndSortedPosts.length} из {posts.length} постов
+              </div>
+              <div className="posts-grid">
+                {filteredAndSortedPosts.map(post => (
+                  <PostItem
+                    key={post.id}
+                    post={post}
+                    onDelete={onDeletePost}
+                    onUpdate={onUpdatePost}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="empty-state">
+              <p>По вашему запросу «{searchQuery}» ничего не найдено.</p>
+              <button
+                className="empty-state-button"
+                onClick={() => setSearchQuery('')}
+              >
+                Очистить поиск
               </button>
-            )}
-          </div>
-
-          <div className="sort-box">
-            <label htmlFor="sort-select" className="sort-label">Сортировка:</label>
-            <select
-              id="sort-select"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="sort-select"
-            >
-              <option value="newest">📅 Новые первыми</option>
-              <option value="oldest">📅 Старые первыми</option>
-              <option value="title">🔤 По алфавиту</option>
-            </select>
-          </div>
-        </div>
-      )}
-
-      {isEmpty ? (
-        <div className="empty-state">
-          <div className="empty-icon">📭</div>
-          <h2>Постов еще нет</h2>
-          <p>Создайте первый пост, чтобы начать!</p>
-          <Link to="/posts/new" className="btn-create">
-            ➕ Создать пост
-          </Link>
-        </div>
-      ) : isSearchEmpty ? (
-        <div className="empty-state">
-          <div className="empty-icon">🔍</div>
-          <h2>Ничего не найдено</h2>
-          <p>По запросу "{searchQuery}" нет постов</p>
-          <button
-            className="btn-clear"
-            onClick={() => setSearchQuery('')}
-          >
-            Очистить поиск
-          </button>
-        </div>
+            </div>
+          )}
+        </>
       ) : (
-        <div className="posts-grid">
-          {filteredPosts.map(post => (
-            <PostItem
-              key={post.id}
-              post={post}
-              onDelete={deletePost}
-              onEdit={handleEditPost}
-            />
-          ))}
+        <div className="empty-state">
+          <h2>Нет постов</h2>
+          <p>Начните с создания первого поста!</p>
+          <Link to="/posts/new" className="empty-state-button">
+            Создать пост
+          </Link>
         </div>
       )}
     </div>
