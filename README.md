@@ -1,34 +1,67 @@
-﻿# GHI Agent Pipeline Playground Site
+# React Application
 
-Minimal website for testing coding agents on small frontend tasks.
+This project has been migrated from vanilla JavaScript to React using Vite.
 
-## What is inside
+## Getting Started
 
-- `index.html` - one-page task board UI
-- `styles.css` - styling and light/dark theme
-- `app.js` - localStorage task CRUD, filters, search, seed demo
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
 
-## Run locally
+### Installation
 
-No build needed. Open directly:
-
-- Windows: double click `index.html`
-- Or run a tiny server from this folder:
-
-```powershell
-python -m http.server 8080
+```bash
+npm install
 ```
 
-Then open <http://localhost:8080>.
+### Development
 
-## Example tasks for agents
+Start the development server:
 
-1. Add due date field and sorting.
-2. Add drag and drop between statuses.
-3. Add edit mode for existing task.
-4. Add keyboard shortcuts and accessibility labels.
-5. Add export/import JSON backup.
+```bash
+npm run dev
+```
 
-## Notes
+The app will be available at `http://localhost:3000`
 
-This app stores data in browser `localStorage` only.
+### Build
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+### Preview
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+.
+├── src/
+│   ├── App.jsx          # Main React component
+│   ├── App.css          # Component styles
+│   ├── index.css        # Global styles
+│   └── main.jsx         # Entry point
+├── index.html           # HTML template
+├── vite.config.js       # Vite configuration
+├── package.json         # Dependencies and scripts
+└── README.md           # This file
+```
+
+## Features
+
+- ⚡ Built with Vite for fast development and optimized builds
+- ⚛️ React 18 for modern UI development
+- 🎨 CSS styling with imported stylesheets
+- 🔧 ESM module support
+
+## Migration Notes
+
+The core functionality from `app.js` has been preserved in the `App.jsx` component while adopting React best practices for state management and component composition.
