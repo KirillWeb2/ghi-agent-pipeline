@@ -1,26 +1,36 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
 import Layout from './components/Layout'
 import PostsList from './pages/PostsList'
 import CreatePost from './pages/CreatePost'
-import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
+
+// Posts context for global state management
+const PostsContext = createContext()
+
+export const usePostsContext = () => {
+  const context = useContext(PostsContext)
+  if (!context) {
+    throw new Error('usePostsContext must be used within PostsProvider')
+  }
+  return context
+}
 
 function App() {
   const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
 
   // Load posts from localStorage on mount
   useEffect(() => {
     try {
-      const savedPosts = localStorage.getItem('posts')
-      if (savedPosts) {
-        setPosts(JSON.parse(savedPosts))
+      const saved = localStorage.getItem('posts')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed)) {
+          setPosts(parsed)
+        }
       }
     } catch (error) {
       console.error('Failed to load posts from localStorage:', error)
-    } finally {
-      setLoading(false)
     }
   }, [])
 
@@ -33,65 +43,59 @@ function App() {
     }
   }, [posts])
 
-  const addPost = (newPost) => {
-    const post = {
+  const addPost = (post) => {
+    const newPost = {
       id: Date.now(),
-      ...newPost,
+      ...post,
       createdAt: new Date().toISOString(),
+      imageUrl: getRandomCatImage(),
     }
-    setPosts((prevPosts) => [post, ...prevPosts])
-    return post
+    setPosts([newPost, ...posts])
+    return newPost
   }
 
-  const updatePost = (id, updatedPost) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === id ? { ...post, ...updatedPost, updatedAt: new Date().toISOString() } : post
-      )
-    )
+  const updatePost = (id, updates) => {
+    setPosts(posts.map(p => p.id === id ? { ...p, ...updates } : p))
   }
 
   const deletePost = (id) => {
-    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id))
+    setPosts(posts.filter(p => p.id !== id))
   }
 
   const searchPosts = (query) => {
     if (!query.trim()) return posts
-    const lowerQuery = query.toLowerCase()
-    return posts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(lowerQuery) ||
-        post.body.toLowerCase().includes(lowerQuery)
+    const q = query.toLowerCase()
+    return posts.filter(p => 
+      p.title.toLowerCase().includes(q) || 
+      p.body.toLowerCase().includes(q)
     )
   }
 
-  if (loading) {
-    return <div className="loading">Loading posts...</div>
+  const getRandomCatImage = () => {
+    // Using a placeholder cat API
+    const randomId = Math.floor(Math.random() * 1000)
+    return `https://api.thecatapi.com/v1/images/search?mime_types=jpg&limit=1&random=${randomId}?id=${randomId}`
+  }
+
+  const value = {
+    posts,
+    addPost,
+    updatePost,
+    deletePost,
+    searchPosts,
   }
 
   return (
-    <ErrorBoundary>
+    <PostsContext.Provider value={value}>
       <Layout>
         <Routes>
           <Route path="/" element={<Navigate to="/posts" replace />} />
-          <Route
-            path="/posts"
-            element={
-              <PostsList
-                posts={posts}
-                onDelete={deletePost}
-                onSearch={searchPosts}
-              />
-            }
-          />
-          <Route
-            path="/posts/new"
-            element={<CreatePost onAddPost={addPost} />}
-          />
+          <Route path="/posts" element={<PostsList />} />
+          <Route path="/posts/new" element={<CreatePost />} />
           <Route path="*" element={<Navigate to="/posts" replace />} />
         </Routes>
       </Layout>
-    </ErrorBoundary>
+    </PostsContext.Provider>
   )
 }
 

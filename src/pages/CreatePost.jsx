@@ -1,32 +1,29 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { usePostsContext } from '../App'
 import PostForm from '../components/PostForm'
 import './CreatePost.css'
 
-function CreatePost({ onAddPost }) {
+function CreatePost() {
   const navigate = useNavigate()
-  const [error, setError] = useState(null)
+  const { addPost } = usePostsContext()
 
-  const handleSubmit = (postData) => {
+  const handleSubmit = async (formData) => {
     try {
-      setError(null)
-      onAddPost(postData)
-      navigate('/posts')
-    } catch (err) {
-      setError('Failed to create post. Please try again.')
-      console.error('Error creating post:', err)
+      await addPost(formData)
+      navigate('/posts', { replace: true })
+    } catch (error) {
+      console.error('Error creating post:', error)
+      throw error
     }
-  }
-
-  const handleCancel = () => {
-    navigate('/posts')
   }
 
   return (
     <div className="create-post-container">
-      <h1>Create New Post</h1>
-      {error && <div className="error-message">{error}</div>}
-      <PostForm onSubmit={handleSubmit} onCancel={handleCancel} />
+      <div className="create-post-header">
+        <h1>✍️ Создать новый пост</h1>
+        <p>Поделитесь своей историей с сообществом</p>
+      </div>
+      <PostForm onSubmit={handleSubmit} submitText="✨ Создать пост" />
     </div>
   )
 }
