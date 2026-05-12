@@ -1,82 +1,12 @@
-﻿<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agent Task Playground</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="topbar">
-    <h1>Agent Task Playground</h1>
-    <div class="topbar-actions">
-      <button id="themeToggle" class="btn btn-secondary" type="button">Toggle Theme</button>
-      <button id="seedBtn" class="btn btn-secondary" type="button">Seed Demo Tasks</button>
-      <button id="helpBtn" class="btn btn-secondary" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="helpDialog">Help</button>
-    </div>
-  </header>
-
-  <main class="layout">
-    <section class="card">
-      <h2>Create Task</h2>
-      <form id="taskForm" class="form-grid">
-        <label>
-          Title
-          <input id="title" name="title" placeholder="Fix search highlight" required />
-        </label>
-
-        <label>
-          Priority
-          <select id="priority" name="priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-          </select>
-        </label>
-
-        <label class="full-width">
-          Description
-          <textarea id="description" name="description" rows="4" placeholder="Describe expected behavior" required></textarea>
-        </label>
-
-        <button type="submit" class="btn">Add Task</button>
-      </form>
-    </section>
-
-    <section class="card">
-      <div class="row space-between">
-        <h2>Task Backlog</h2>
-        <input id="search" placeholder="Search tasks..." />
-      </div>
-
-      <div class="row filters" id="statusFilters">
-        <button class="filter active" data-status="all">All</button>
-        <button class="filter" data-status="todo">Todo</button>
-        <button class="filter" data-status="in_progress">In Progress</button>
-        <button class="filter" data-status="done">Done</button>
-      </div>
-
-      <ul id="taskList" class="task-list"></ul>
-      <p id="emptyState" class="empty">No tasks yet. Create one above.</p>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>Built as a tiny playground for coding-agent tasks.</p>
-  </footer>
-
-  <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle">
-    <div class="help-dialog-panel">
-      <button type="button" class="help-dialog-close" id="helpCloseBtn" aria-label="Close help">&times;</button>
-      <h2 id="helpTitle" class="help-dialog-title">Quick tips</h2>
-      <ul class="help-dialog-list">
-        <li>Use filters and search to narrow the backlog before changing task status.</li>
-        <li>Toggle theme anytime; your choice is saved in this browser.</li>
-        <li>Seed demo tasks only runs when the list is empty—clear tasks first if you need samples.</li>
-      </ul>
-    </div>
-  </dialog>
-
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
