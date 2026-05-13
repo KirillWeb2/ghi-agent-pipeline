@@ -1,33 +1,35 @@
-import { NavLink } from 'react-router-dom'
-import './Layout.css'
+import { Link } from 'react-router-dom';
+import './Layout.css';
 
-function Layout({ children }) {
+export default function Layout({ children }) {
   return (
     <div className="layout">
-      <nav className="navbar">
-        <div className="navbar-container">
-          <h1 className="navbar-title">PostApp</h1>
-          <div className="nav-links">
-            <NavLink
-              to="/posts"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              Посты
-            </NavLink>
-            <NavLink
-              to="/posts/new"
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              Новый пост
-            </NavLink>
-          </div>
+      <header className="layout-header">
+        <div className="layout-header-content">
+          <h1 className="layout-logo">
+            <Link to="/">MyApp</Link>
+          </h1>
+          <nav className="layout-nav">
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/create">Create Post</Link>
+              </li>
+              <li>
+                <Link to="/profile">Profile</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
-      </nav>
-      <main className="main-content">
+      </header>
+      <div className="layout-content">
         {children}
-      </main>
+      </div>
+      <footer className="layout-footer">
+        <p>&copy; 2024 MyApp. All rights reserved.</p>
+      </footer>
     </div>
-  )
+  );
 }
-
-export default Layout
