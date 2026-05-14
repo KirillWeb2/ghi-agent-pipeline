@@ -1,0 +1,150 @@
+.comments-list {
+  margin-top: 24px;
+}
+
+.no-comments {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-style: italic;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+}
+
+.comment-item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+}
+
+.comment-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #333;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: #999;
+}
+
+.comment-edited {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+.comment-text {
+  color: #555;
+  line-height: 1.5;
+  margin: 8px 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.edit-btn {
+  color: #2196F3;
+  border-color: #2196F3;
+}
+
+.edit-btn:hover {
+  background-color: #e3f2fd;
+}
+
+.delete-btn {
+  color: #d32f2f;
+  border-color: #d32f2f;
+}
+
+.delete-btn:hover {
+  background-color: #ffebee;
+}
+
+.save-btn {
+  color: #4CAF50;
+  border-color: #4CAF50;
+  background-color: #f1f8f4;
+}
+
+.save-btn:hover {
+  background-color: #e8f5e9;
+}
+
+.cancel-btn {
+  color: #999;
+  border-color: #ddd;
+}
+
+.cancel-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.comment-edit {
+  margin-top: 12px;
+}
+
+.edit-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+.edit-textarea:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 4px rgba(33, 150, 243, 0.2);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  border-left: 3px solid #d32f2f;
+}

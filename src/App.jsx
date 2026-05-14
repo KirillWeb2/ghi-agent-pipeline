@@ -1,20 +1,16 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import PostsList from './pages/PostsList'
-import CreatePost from './pages/CreatePost'
-import Profile from './pages/Profile'
-import './App.css'
+import './App.css';
+import Layout from './components/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
+import { CommentsProvider } from './context/CommentsContext';
 
 function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<PostsList />} />
-        <Route path="/create" element={<CreatePost />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </Layout>
-  )
+    <ErrorBoundary>
+      <CommentsProvider>
+        <Layout />
+      </CommentsProvider>
+    </ErrorBoundary>
+  );
 }
 
-export default App
+export default App;
