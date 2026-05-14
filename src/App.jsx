@@ -1,28 +1,29 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CommentsProvider } from './context/CommentsContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import PostsList from './pages/PostsList';
+import PostDetail from './pages/PostDetail';
 import CreatePost from './pages/CreatePost';
 import Profile from './pages/Profile';
-import PostDetail from './pages/PostDetail';
-import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
 function App() {
   return (
     <ErrorBoundary>
-      <CommentsProvider>
-        <Router>
+      <Router>
+        <CommentsProvider>
           <Layout>
             <Routes>
               <Route path="/" element={<PostsList />} />
+              <Route path="/post/:id" element={<PostDetail />} />
               <Route path="/create" element={<CreatePost />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/post/:id" element={<PostDetail />} />
             </Routes>
           </Layout>
-        </Router>
-      </CommentsProvider>
+        </CommentsProvider>
+      </Router>
     </ErrorBoundary>
   );
 }
