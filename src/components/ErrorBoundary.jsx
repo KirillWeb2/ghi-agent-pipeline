@@ -1,64 +1,32 @@
-import React from 'react'
-import './ErrorBoundary.css'
+import React from 'react';
+import './ErrorBoundary.css';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = {
-      hasError: false,
-      error: null,
-      errorInfo: null,
-    }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      error,
-      errorInfo,
-    })
-    console.error('Error caught by ErrorBoundary:', error, errorInfo)
-  }
-
-  handleReset = () => {
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null,
-    })
+    console.error('ErrorBoundary caught:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return (
         <div className="error-boundary">
-          <div className="error-container">
-            <h1 className="error-title">Что-то пошло не так</h1>
-            <p className="error-message">
-              К сожалению, произошла непредвиденная ошибка. Пожалуйста, попробуйте снова.
-            </p>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="error-details">
-                <summary>Детали ошибки (режим разработки)</summary>
-                <pre className="error-stack">
-                  {this.state.error.toString()}
-                  {this.state.errorInfo && this.state.errorInfo.componentStack}
-                </pre>
-              </details>
-            )}
-            <button className="error-reset-btn" onClick={this.handleReset}>
-              Попробовать снова
-            </button>
-          </div>
+          <h1>Something went wrong</h1>
+          <p>{this.state.error?.message}</p>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;
