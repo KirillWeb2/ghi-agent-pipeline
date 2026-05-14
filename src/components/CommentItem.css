@@ -1,0 +1,138 @@
+.comment-item {
+  padding: 12px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.comment-text {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comment-action-btn {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.comment-edit-btn {
+  background: #e8f4f8;
+  color: #0056b3;
+}
+
+.comment-edit-btn:hover {
+  background: #d0e8f0;
+}
+
+.comment-delete-btn {
+  background: #ffe8e8;
+  color: #dc3545;
+}
+
+.comment-delete-btn:hover {
+  background: #ffd0d0;
+}
+
+.comment-edit {
+  margin-top: 10px;
+}
+
+.comment-edit-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: none;
+  margin-bottom: 8px;
+}
+
+.comment-edit-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.comment-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.comment-edit-save,
+.comment-edit-cancel {
+  padding: 6px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.comment-edit-save {
+  background: #28a745;
+  color: white;
+}
+
+.comment-edit-save:hover:not(:disabled) {
+  background: #218838;
+}
+
+.comment-edit-save:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.comment-edit-cancel {
+  background: #6c757d;
+  color: white;
+}
+
+.comment-edit-cancel:hover {
+  background: #5a6268;
+}
